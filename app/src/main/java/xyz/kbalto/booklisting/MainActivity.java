@@ -22,7 +22,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Book>> {
-    private String mRequestUrl = "https://www.googleapis.com/books/v1/volumes?q=";
+    private String mRequestUrl = null; //"https://www.googleapis.com/books/v1/volumes?q="
     private BookAdapter mAdapter;
     private TextView mEmptyStateTextView;
     private String mQuery = "";
@@ -38,9 +38,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mEmptyStateTextView = (TextView) findViewById(R.id.no_items_view);
         bookListView.setEmptyView(mEmptyStateTextView);
 
+
         mAdapter = new BookAdapter(this, new ArrayList<Book>());
         bookListView.setAdapter(mAdapter);
         Log.i("onCreate", "onCreate");
+
+        if (mRequestUrl == null){
+            bookListView.setEmptyView(mEmptyStateTextView);
+        }
 
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -78,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     Toast.makeText(MainActivity.this, "Nothing to search", Toast.LENGTH_SHORT).show();
                 }
                 // Update the mRequestUrl value with the new mQuery.
-                mRequestUrl = mRequestUrl + mQuery + "&maxResults=15";
+                mRequestUrl = "https://www.googleapis.com/books/v1/volumes?q=" + mQuery + "&maxResults=15";
                 Log.i("onQueryTextSubmit", "mRequestUrl value is: " + mRequestUrl);
                 // Restart the loader.
                 getLoaderManager().restartLoader(1, null, MainActivity.this);
